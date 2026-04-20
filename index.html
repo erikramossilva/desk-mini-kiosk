@@ -2,9 +2,10 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no" />
   <title>Desk Mini | Central de Chamadas</title>
-  <meta name="description" content="Kiosk para Cisco Desk Mini com 3 botões de chamada: Brasil no Microsoft Teams, USA no Webex e EUR no Google Meet." />
+  <meta name="description" content="Kiosk de chamadas para Cisco Desk Mini com acesso rápido ao Microsoft Teams, Webex Meeting e Google Meet." />
   <style>
     :root {
       --bg1: #0b6b75;
@@ -12,16 +13,31 @@
       --card: rgba(255,255,255,0.12);
       --card-border: rgba(255,255,255,0.18);
       --text: #ffffff;
-      --muted: rgba(255,255,255,0.82);
+      --muted: rgba(255,255,255,0.84);
+      --overlay: rgba(5, 29, 32, 0.84);
       --br: #16a34a;
       --us: #2563eb;
       --eu: #d97706;
       --shadow: 0 18px 48px rgba(0,0,0,.22);
       --radius: 26px;
+      --focus: rgba(255,255,255,.36);
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Arial, Helvetica, sans-serif; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #084d55;
+    }
+
     body {
       display: flex;
       align-items: center;
@@ -30,6 +46,7 @@
       color: var(--text);
       padding: 4vw;
       position: relative;
+      user-select: none;
     }
 
     .brand {
@@ -37,7 +54,7 @@
       top: 28px;
       left: 34px;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       letter-spacing: .18rem;
       opacity: .92;
     }
@@ -52,22 +69,42 @@
       justify-content: center;
       text-align: center;
     }
-    .screen.active { display: flex; }
+
+    .screen.active {
+      display: flex;
+    }
 
     h1 {
       margin: 0;
       font-size: clamp(2.8rem, 6vw, 5.6rem);
       line-height: 1.05;
     }
+
     h2 {
       margin: 0;
       font-size: clamp(2rem, 4vw, 3.3rem);
     }
+
     .subtitle {
       margin-top: 1rem;
       color: var(--muted);
-      font-size: clamp(1.2rem, 2vw, 2rem);
+      font-size: clamp(1.15rem, 2vw, 1.95rem);
+      max-width: 1080px;
     }
+
+    .touch,
+    .back,
+    .join {
+      outline: none;
+    }
+
+    .touch:focus-visible,
+    .back:focus-visible,
+    .join:focus-visible,
+    .overlay-action:focus-visible {
+      box-shadow: 0 0 0 4px var(--focus);
+    }
+
     .touch {
       margin-top: 2.4rem;
       border: none;
@@ -77,16 +114,21 @@
       cursor: pointer;
       animation: pulse 1.8s infinite ease-in-out;
     }
+
     @keyframes pulse {
       0%,100% { transform: scale(1); opacity: .86; }
       50% { transform: scale(1.06); opacity: 1; }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     .cards {
       margin-top: 2rem;
       width: 100%;
       display: grid;
-      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      grid-template-columns: repeat(3, minmax(240px, 1fr));
       gap: 1.8rem;
     }
 
@@ -95,7 +137,7 @@
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      min-height: 420px;
+      min-height: 430px;
       padding: 2rem 1.5rem;
       display: flex;
       flex-direction: column;
@@ -123,12 +165,20 @@
       font-weight: 700;
     }
 
+    .platform {
+      margin-top: .55rem;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      opacity: .95;
+    }
+
     .description {
-      margin: .6rem 0 0;
+      margin: .8rem 0 0;
       color: var(--muted);
       line-height: 1.45;
-      font-size: clamp(1rem, 1.3vw, 1.18rem);
-      min-height: 3.2em;
+      font-size: clamp(1rem, 1.3vw, 1.14rem);
+      min-height: 4.4em;
     }
 
     .join {
@@ -141,10 +191,23 @@
       font-weight: 700;
       color: #fff;
       cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 64px;
     }
+
     .join.br { background: var(--br); }
     .join.us { background: var(--us); }
     .join.eu { background: var(--eu); }
+    .join.disabled { opacity: .6; pointer-events: none; }
+
+    .helper {
+      margin-top: .8rem;
+      font-size: .94rem;
+      color: rgba(255,255,255,.72);
+    }
 
     .footer {
       position: absolute;
@@ -171,7 +234,81 @@
 
     .note {
       text-align: right;
-      max-width: 60%;
+      max-width: 62%;
+      line-height: 1.45;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--overlay);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 4vw;
+      z-index: 30;
+    }
+
+    .overlay.active {
+      display: flex;
+    }
+
+    .overlay-card {
+      width: min(720px, 100%);
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,.22);
+      border-top-color: #fff;
+      margin: 0 auto 1.25rem;
+      animation: spin 1s linear infinite;
+    }
+
+    .overlay-title {
+      margin: 0;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+    }
+
+    .overlay-text {
+      margin: .9rem auto 0;
+      max-width: 36rem;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 1.08rem;
+    }
+
+    .overlay-actions {
+      margin-top: 1.4rem;
+      display: flex;
+      justify-content: center;
+      gap: .8rem;
+      flex-wrap: wrap;
+    }
+
+    .overlay-action {
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      border-radius: 14px;
+      padding: .9rem 1.25rem;
+      font-size: 1rem;
+      cursor: pointer;
+      min-width: 180px;
+    }
+
+    .overlay-action.primary {
+      background: rgba(255,255,255,.18);
+      border-color: rgba(255,255,255,.28);
     }
 
     @media (max-width: 1100px) {
@@ -191,37 +328,48 @@
   <div class="brand">CISCO DESK MINI</div>
 
   <section id="home" class="screen active">
-    <h1>Central de Suporte</h1>
-    <div class="subtitle">Escolha Brasil, USA ou EUR para abrir a chamada na plataforma correspondente usando os recursos do Cisco Desk Mini</div>
-    <button id="startButton" class="touch">Toque para iniciar</button>
+    <h1>Central de Chamadas</h1>
+    <div class="subtitle">Escolha Brasil, USA ou EUR para abrir a reunião na plataforma correspondente usando os recursos do Cisco Desk Mini</div>
+    <button id="startButton" class="touch" type="button">Toque para iniciar</button>
   </section>
 
-  <section id="menu" class="screen">
+  <section id="menu" class="screen" aria-label="Menu de regiões">
     <h2>Selecione a região de atendimento</h2>
     <div class="subtitle">Brasil abre Microsoft Teams, USA abre Webex Meeting e EUR abre Google Meet</div>
 
     <div class="cards" id="cards"></div>
 
     <div class="footer">
-      <button id="backButton" class="back">Voltar</button>
-      <div class="note">Esta página usa os links finais das reuniões e aproveita os recursos do Cisco Desk Mini para abrir a chamada.</div>
+      <button id="backButton" class="back" type="button">Voltar</button>
+      <div class="note">Compatibilidade otimizada para Cisco Desk Mini. A opção USA usa discagem SIP do Webex; Brasil e EUR usam links web seguros.</div>
+    </div>
+  </section>
+
+  <section id="launchOverlay" class="overlay" aria-live="polite" aria-hidden="true">
+    <div class="overlay-card">
+      <div class="spinner" aria-hidden="true"></div>
+      <h3 id="overlayTitle" class="overlay-title">Abrindo reunião</h3>
+      <p id="overlayText" class="overlay-text">Aguarde alguns segundos enquanto o Cisco Desk Mini abre a chamada.</p>
+      <div class="overlay-actions">
+        <button id="retryButton" class="overlay-action primary" type="button">Tentar novamente</button>
+        <button id="cancelButton" class="overlay-action" type="button">Voltar ao menu</button>
+      </div>
     </div>
   </section>
 
   <script>
-    // ============================================================
-    // CONFIGURAÇÃO PRINCIPAL
-    // A abertura é feita no WebEngine do Cisco Desk Mini.
-    // ============================================================
     const CONFIG = {
       resetAfterMs: 120000,
+      launchFeedbackMs: 220,
+      launchTimeoutMs: 9000,
       services: [
         {
           id: 'br',
           region: 'Brasil',
           icon: '🇧🇷',
           platform: 'Microsoft Teams',
-          description: 'Chamada Brasil via Microsoft Teams usando os recursos do Cisco Desk Mini.',
+          description: 'Abre a reunião do Brasil com navegação web segura no WebEngine do Cisco Desk Mini.',
+          helper: 'Fluxo web HTTPS',
           buttonLabel: 'Entrar no Teams Brasil',
           meetingUrl: 'https://teams.microsoft.com/meet/248702429057970?p=RAdyJ7Ml2pNBrDtwiz'
         },
@@ -230,16 +378,18 @@
           region: 'USA',
           icon: '🇺🇸',
           platform: 'Webex Meeting',
-          description: 'Chamada USA via Webex Meeting usando os recursos do Cisco Desk Mini.',
+          description: 'Abre a reunião USA via discagem SIP do Webex, com melhor aderência aos recursos nativos do dispositivo.',
+          helper: 'Fluxo SIP nativo',
           buttonLabel: 'Entrar no Webex USA',
-          Sip: '25325993505@napit.webex.com'
+          meetingUrl: 'sip:25327218092@napit.webex.com'
         },
         {
           id: 'eu',
           region: 'EUR',
           icon: '🇪🇺',
           platform: 'Google Meet',
-          description: 'Chamada EUR via Google Meet usando os recursos do Cisco Desk Mini.',
+          description: 'Abre a reunião EUR com navegação web segura no WebEngine do Cisco Desk Mini.',
+          helper: 'Fluxo web HTTPS',
           buttonLabel: 'Entrar no Google Meet EUR',
           meetingUrl: 'https://meet.google.com/cjg-wubf-zwh'
         }
@@ -251,7 +401,18 @@
     const cards = document.getElementById('cards');
     const startButton = document.getElementById('startButton');
     const backButton = document.getElementById('backButton');
-    let inactivityTimer;
+    const launchOverlay = document.getElementById('launchOverlay');
+    const overlayTitle = document.getElementById('overlayTitle');
+    const overlayText = document.getElementById('overlayText');
+    const retryButton = document.getElementById('retryButton');
+    const cancelButton = document.getElementById('cancelButton');
+
+    let inactivityTimer = null;
+    let launchTimer = null;
+    let launchState = {
+      inProgress: false,
+      service: null
+    };
 
     function show(screen) {
       home.classList.toggle('active', screen === 'home');
@@ -261,41 +422,160 @@
 
     function resetInactivity() {
       clearTimeout(inactivityTimer);
-      inactivityTimer = setTimeout(() => show('home'), CONFIG.resetAfterMs);
+      inactivityTimer = setTimeout(() => {
+        clearLaunchState();
+        show('home');
+      }, CONFIG.resetAfterMs);
     }
 
-    function openMeeting(url) {
+    function isSipUrl(url) {
+      return typeof url === 'string' && url.toLowerCase().startsWith('sip:');
+    }
+
+    function isHttpsUrl(url) {
+      return typeof url === 'string' && url.toLowerCase().startsWith('https://');
+    }
+
+    function isSupportedUrl(url) {
+      return isSipUrl(url) || isHttpsUrl(url);
+    }
+
+    function setOverlay(title, text) {
+      overlayTitle.textContent = title;
+      overlayText.textContent = text;
+      launchOverlay.classList.add('active');
+      launchOverlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideOverlay() {
+      launchOverlay.classList.remove('active');
+      launchOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function clearLaunchState() {
+      clearTimeout(launchTimer);
+      launchState.inProgress = false;
+      launchState.service = null;
+      hideOverlay();
+      document.querySelectorAll('.join').forEach((element) => element.classList.remove('disabled'));
+    }
+
+    function disableJoinButtons() {
+      document.querySelectorAll('.join').forEach((element) => element.classList.add('disabled'));
+    }
+
+    function openMeeting(service) {
+      if (!service || !isSupportedUrl(service.meetingUrl)) {
+        setOverlay(
+          'Link não suportado',
+          'O endereço configurado para esta reunião não é compatível com o Cisco Desk Mini. Revise o link no index.html.'
+        );
+        launchState = { inProgress: false, service: service || null };
+        return;
+      }
+
+      if (launchState.inProgress) {
+        return;
+      }
+
+      launchState = { inProgress: true, service };
+      disableJoinButtons();
       resetInactivity();
-      window.location.href = url;
+
+      const launchText = isSipUrl(service.meetingUrl)
+        ? `Abrindo ${service.platform} de ${service.region} via discagem SIP do Cisco Desk Mini.`
+        : `Abrindo ${service.platform} de ${service.region} no WebEngine do Cisco Desk Mini.`;
+
+      setOverlay('Abrindo reunião', launchText);
+
+      launchTimer = setTimeout(() => {
+        setOverlay(
+          'Se a reunião não abriu',
+          'Verifique rede, permissões do serviço e compatibilidade do link. Você pode tentar novamente ou voltar ao menu.'
+        );
+        launchState.inProgress = false;
+        document.querySelectorAll('.join').forEach((element) => element.classList.remove('disabled'));
+      }, CONFIG.launchTimeoutMs);
+
+      window.setTimeout(() => {
+        if (isSipUrl(service.meetingUrl)) {
+          window.location.href = service.meetingUrl;
+          return;
+        }
+
+        window.location.assign(service.meetingUrl);
+      }, CONFIG.launchFeedbackMs);
     }
 
     function buildCards() {
       cards.innerHTML = '';
+
       CONFIG.services.forEach((service) => {
         const card = document.createElement('article');
         card.className = 'card';
+
+        const joinClass = `join ${service.id}`;
+
         card.innerHTML = `
           <div>
             <div class="badge">${service.icon}</div>
             <div class="region">${service.region}</div>
-            <p class="description"><strong>${service.platform}</strong><br>${service.description}</p>
+            <div class="platform">${service.platform}</div>
+            <p class="description">${service.description}</p>
+            <div class="helper">${service.helper}</div>
           </div>
-          <button class="join ${service.id}" type="button">${service.buttonLabel}</button>
+          <a class="${joinClass}" href="${service.meetingUrl}" role="button">${service.buttonLabel}</a>
         `;
-        card.querySelector('button').addEventListener('click', () => openMeeting(service.meetingUrl));
+
+        const trigger = card.querySelector('.join');
+        trigger.addEventListener('click', (event) => {
+          event.preventDefault();
+          openMeeting(service);
+        });
+
         cards.appendChild(card);
       });
     }
 
     startButton.addEventListener('click', () => show('menu'));
-    backButton.addEventListener('click', () => show('home'));
+    backButton.addEventListener('click', () => {
+      clearLaunchState();
+      show('home');
+    });
 
-    ['click', 'touchstart', 'mousemove', 'keydown'].forEach((eventName) => {
+    retryButton.addEventListener('click', () => {
+      const retryService = launchState.service;
+      clearLaunchState();
+
+      if (retryService) {
+        openMeeting(retryService);
+      }
+    });
+
+    cancelButton.addEventListener('click', () => {
+      clearLaunchState();
+      show('menu');
+    });
+
+    ['pointerdown', 'touchstart', 'keydown'].forEach((eventName) => {
       document.addEventListener(eventName, resetInactivity, { passive: true });
     });
 
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        clearLaunchState();
+        resetInactivity();
+      }
+    });
+
+    window.addEventListener('pageshow', () => {
+      clearLaunchState();
+      resetInactivity();
+    });
+
     buildCards();
-    resetInactivity();
+    clearLaunchState();
+    show('home');
   </script>
 </body>
 </html>
