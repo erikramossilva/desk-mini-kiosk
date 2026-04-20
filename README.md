@@ -1,10 +1,10 @@
 # Desk Mini Kiosk para GitHub Pages
 
-Pacote final pronto para publicar uma página estática de kiosk no **Cisco Desk Mini** com **3 botões de suporte Microsoft Teams**:
+Pacote final pronto para publicar uma página estática de kiosk no **Cisco Desk Mini** com **3 botões de chamada para plataformas diferentes**:
 
-- Brasil
-- USA
-- EUR
+- Brasil → Microsoft Teams
+- USA → Webex Meeting
+- EUR → Google Meet
 
 ## Estrutura do pacote
 
@@ -12,14 +12,14 @@ Pacote final pronto para publicar uma página estática de kiosk no **Cisco Desk
 - `.nojekyll` → evita processamento Jekyll no GitHub Pages
 - `README.md` → instruções de publicação
 
-## Ajuste dos links do Teams
+## Ajuste dos links das reuniões
 
 Abra o arquivo `index.html` e localize o bloco `CONFIG.services`.
-Substitua os 3 links abaixo pelos links reais do Microsoft Teams:
+Substitua os 3 links abaixo pelos links reais das reuniões:
 
-- `https://teams.microsoft.com/l/meetup-join/EXEMPLO-BRASIL`
-- `https://teams.microsoft.com/l/meetup-join/EXEMPLO-USA`
-- `https://teams.microsoft.com/l/meetup-join/EXEMPLO-EUR`
+- Brasil → `https://teams.microsoft.com/l/meetup-join/EXEMPLO-BRASIL`
+- USA → `https://example.webex.com/meet/EXEMPLO-USA`
+- EUR → `https://meet.google.com/EXEMPLO-EUR`
 
 ## Como publicar no GitHub Pages
 
@@ -59,4 +59,4 @@ xConfiguration UserInterface Assistant Mode: Off
 
 ## Observação
 
-O GitHub Pages publica esta página como site estático. O Microsoft Teams suporta entrada por link em navegador, mas para ambiente corporativo é recomendado validar os links finais e o comportamento no equipamento antes de colocar em produção.
+O GitHub Pages publica esta página como site estático. A navegação para Microsoft Teams, Webex Meeting e Google Meet é feita pelo WebEngine do Cisco Desk Mini, aproveitando os recursos do equipamento para abrir a chamada no próprio dispositivo. Em ambiente corporativo, é recomendado validar os links finais e o comportamento no equipamento antes de colocar em produção.
