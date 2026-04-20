@@ -3,53 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cisco Desk Mini | Suporte</title>
+  <title>Desk Mini | Suporte Teams</title>
+  <meta name="description" content="Kiosk para Cisco Desk Mini com 3 botões de suporte Microsoft Teams: Brasil, USA e EUR." />
   <style>
     :root {
-      --bg: #0b6b75;
-      --bg-2: #084d55;
+      --bg1: #0b6b75;
+      --bg2: #084d55;
       --card: rgba(255,255,255,0.12);
       --card-border: rgba(255,255,255,0.18);
       --text: #ffffff;
-      --muted: rgba(255,255,255,0.78);
-      --accent-br: #22c55e;
-      --accent-us: #3b82f6;
-      --accent-eu: #f59e0b;
-      --shadow: 0 20px 50px rgba(0,0,0,0.22);
+      --muted: rgba(255,255,255,0.82);
+      --br: #16a34a;
+      --us: #2563eb;
+      --eu: #d97706;
+      --shadow: 0 18px 48px rgba(0,0,0,.22);
+      --radius: 26px;
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(140deg, var(--bg), var(--bg-2));
-      color: var(--text);
-    }
-
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: Arial, Helvetica, sans-serif; }
     body {
       display: flex;
       align-items: center;
       justify-content: center;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
       padding: 4vw;
       position: relative;
     }
 
-    .logo {
+    .brand {
       position: absolute;
-      top: 2.4rem;
-      left: 2.8rem;
-      font-size: 1.25rem;
-      letter-spacing: 0.18rem;
-      opacity: 0.92;
+      top: 28px;
+      left: 34px;
       font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: .18rem;
+      opacity: .92;
     }
 
     .screen {
@@ -62,95 +52,82 @@
       justify-content: center;
       text-align: center;
     }
+    .screen.active { display: flex; }
 
-    .screen.active {
-      display: flex;
-    }
-
-    .title {
+    h1 {
       margin: 0;
-      font-size: clamp(2.8rem, 6vw, 5.8rem);
+      font-size: clamp(2.8rem, 6vw, 5.6rem);
       line-height: 1.05;
-      font-weight: 700;
     }
-
+    h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.3rem);
+    }
     .subtitle {
       margin-top: 1rem;
-      font-size: clamp(1.2rem, 2vw, 2rem);
       color: var(--muted);
+      font-size: clamp(1.2rem, 2vw, 2rem);
     }
-
     .touch {
-      margin-top: 2.5rem;
-      font-size: clamp(1.5rem, 2.8vw, 2.4rem);
+      margin-top: 2.4rem;
       border: none;
       background: transparent;
-      color: var(--text);
+      color: white;
+      font-size: clamp(1.5rem, 2.8vw, 2.3rem);
       cursor: pointer;
       animation: pulse 1.8s infinite ease-in-out;
     }
-
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.86; }
+      0%,100% { transform: scale(1); opacity: .86; }
       50% { transform: scale(1.06); opacity: 1; }
     }
 
-    .service-title {
-      margin: 0 0 1rem;
-      font-size: clamp(2rem, 4vw, 3.8rem);
-    }
-
-    .service-subtitle {
-      margin-bottom: 2.2rem;
-      font-size: clamp(1rem, 1.8vw, 1.5rem);
-      color: var(--muted);
-    }
-
     .cards {
+      margin-top: 2rem;
       width: 100%;
       display: grid;
       grid-template-columns: repeat(3, minmax(220px, 1fr));
-      gap: 2rem;
+      gap: 1.8rem;
     }
 
     .card {
-      border: 1px solid var(--card-border);
       background: var(--card);
-      backdrop-filter: blur(8px);
-      border-radius: 28px;
-      min-height: 430px;
-      padding: 2rem 1.8rem;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
+      min-height: 420px;
+      padding: 2rem 1.5rem;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(8px);
     }
 
-    .flag {
+    .badge {
       width: 120px;
       height: 120px;
-      border-radius: 60px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 3.6rem;
-      background: rgba(255,255,255,0.12);
-      border: 2px solid rgba(255,255,255,0.16);
-      margin-top: 0.4rem;
+      font-size: 3.4rem;
+      border: 2px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.10);
+      margin-top: .3rem;
     }
 
     .region {
-      margin: 1.2rem 0 0.4rem;
-      font-size: clamp(1.6rem, 2vw, 2.1rem);
+      margin-top: 1rem;
+      font-size: clamp(1.6rem, 2.2vw, 2.1rem);
       font-weight: 700;
     }
 
-    .desc {
-      margin: 0;
+    .description {
+      margin: .6rem 0 0;
       color: var(--muted);
-      font-size: clamp(1rem, 1.3vw, 1.2rem);
       line-height: 1.45;
+      font-size: clamp(1rem, 1.3vw, 1.18rem);
       min-height: 3.2em;
     }
 
@@ -160,178 +137,160 @@
       border: none;
       border-radius: 18px;
       padding: 1rem 1.2rem;
-      font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+      font-size: clamp(1.05rem, 1.55vw, 1.35rem);
       font-weight: 700;
-      color: white;
+      color: #fff;
       cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease;
     }
-
-    .join:active {
-      transform: scale(0.98);
-    }
-
-    .br { background: var(--accent-br); }
-    .us { background: var(--accent-us); }
-    .eu { background: var(--accent-eu); }
+    .join.br { background: var(--br); }
+    .join.us { background: var(--us); }
+    .join.eu { background: var(--eu); }
 
     .footer {
       position: absolute;
-      bottom: 1.8rem;
-      width: calc(100% - 8vw);
+      left: 4vw;
+      right: 4vw;
+      bottom: 26px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 1rem;
       color: var(--muted);
-      font-size: 1rem;
+      font-size: .98rem;
     }
 
     .back {
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.08);
-      color: white;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
+      color: #fff;
       border-radius: 14px;
-      padding: 0.8rem 1.2rem;
-      font-size: 1.05rem;
+      padding: .8rem 1.2rem;
       cursor: pointer;
+      font-size: 1rem;
     }
 
     .note {
-      max-width: 60%;
       text-align: right;
+      max-width: 60%;
     }
 
     @media (max-width: 1100px) {
-      .cards {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      .card {
-        min-height: auto;
-      }
+      body { overflow: auto; }
+      .cards { grid-template-columns: 1fr; }
+      .card { min-height: auto; }
       .footer {
         position: static;
-        width: 100%;
-        margin-top: 1.5rem;
+        margin-top: 1.4rem;
         flex-direction: column;
-        gap: 1rem;
       }
-      .note {
-        max-width: 100%;
-        text-align: center;
-      }
+      .note { max-width: 100%; text-align: center; }
     }
   </style>
 </head>
 <body>
-  <div class="logo">CISCO DESK MINI</div>
+  <div class="brand">CISCO DESK MINI</div>
 
   <section id="home" class="screen active">
-    <h1 class="title">Central de Suporte</h1>
-    <div class="subtitle">Atendimento com Microsoft Teams</div>
-    <button class="touch" id="startBtn">Toque para iniciar</button>
+    <h1>Central de Suporte</h1>
+    <div class="subtitle">Escolha Brasil, USA ou EUR para abrir o atendimento no Microsoft Teams</div>
+    <button id="startButton" class="touch">Toque para iniciar</button>
   </section>
 
-  <section id="services" class="screen">
-    <h2 class="service-title">Escolha o nível de suporte</h2>
-    <div class="service-subtitle">Selecione a região para abrir a reunião no Microsoft Teams</div>
+  <section id="menu" class="screen">
+    <h2>Selecione a região de atendimento</h2>
+    <div class="subtitle">Os 3 botões abaixo abrem links do Microsoft Teams</div>
 
     <div class="cards" id="cards"></div>
 
     <div class="footer">
-      <button class="back" id="backBtn">Voltar</button>
-      <div class="note">Dica: substitua os links abaixo pelos URLs reais das reuniões do Teams antes de publicar.</div>
+      <button id="backButton" class="back">Voltar</button>
+      <div class="note">Antes de publicar, substitua os 3 links de exemplo pelos links reais do Microsoft Teams.</div>
     </div>
   </section>
 
   <script>
+    // ============================================================
+    // CONFIGURAÇÃO PRINCIPAL
+    // Substitua apenas os valores de teamsUrl pelos links reais.
+    // ============================================================
     const CONFIG = {
       resetAfterMs: 120000,
-      title: 'Central de Suporte',
-      subtitle: 'Atendimento com Microsoft Teams',
       services: [
         {
           id: 'br',
           region: 'Brasil',
-          flag: '🇧🇷',
-          description: 'Atendimento local para equipe do Brasil.',
-          buttonLabel: 'Entrar no suporte Brasil',
-          teamsUrl: 'https://teams.microsoft.com/l/meetup-join/SEU-LINK-BRASIL'
+          icon: '🇧🇷',
+          description: 'Atendimento dedicado para suporte Brasil.',
+          buttonLabel: 'Abrir suporte Brasil',
+          teamsUrl: 'https://teams.microsoft.com/l/meetup-join/EXEMPLO-BRASIL'
         },
         {
           id: 'us',
           region: 'USA',
-          flag: '🇺🇸',
-          description: 'Atendimento internacional para equipe dos Estados Unidos.',
-          buttonLabel: 'Entrar no suporte USA',
-          teamsUrl: 'https://teams.microsoft.com/l/meetup-join/SEU-LINK-USA'
+          icon: '🇺🇸',
+          description: 'Atendimento dedicado para suporte USA.',
+          buttonLabel: 'Abrir suporte USA',
+          teamsUrl: 'https://teams.microsoft.com/l/meetup-join/EXEMPLO-USA'
         },
         {
           id: 'eu',
           region: 'EUR',
-          flag: '🇪🇺',
-          description: 'Atendimento internacional para equipe da Europa.',
-          buttonLabel: 'Entrar no suporte EUR',
-          teamsUrl: 'https://teams.microsoft.com/l/meetup-join/SEU-LINK-EUR'
+          icon: '🇪🇺',
+          description: 'Atendimento dedicado para suporte Europa.',
+          buttonLabel: 'Abrir suporte EUR',
+          teamsUrl: 'https://teams.microsoft.com/l/meetup-join/EXEMPLO-EUR'
         }
       ]
     };
 
     const home = document.getElementById('home');
-    const services = document.getElementById('services');
+    const menu = document.getElementById('menu');
     const cards = document.getElementById('cards');
-    const startBtn = document.getElementById('startBtn');
-    const backBtn = document.getElementById('backBtn');
-
-    let resetTimer;
+    const startButton = document.getElementById('startButton');
+    const backButton = document.getElementById('backButton');
+    let inactivityTimer;
 
     function show(screen) {
       home.classList.toggle('active', screen === 'home');
-      services.classList.toggle('active', screen === 'services');
+      menu.classList.toggle('active', screen === 'menu');
       resetInactivity();
     }
 
     function resetInactivity() {
-      clearTimeout(resetTimer);
-      resetTimer = setTimeout(() => show('home'), CONFIG.resetAfterMs);
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => show('home'), CONFIG.resetAfterMs);
     }
 
-    function goToTeams(url) {
+    function openTeams(url) {
       resetInactivity();
       window.location.href = url;
     }
 
     function buildCards() {
       cards.innerHTML = '';
-      CONFIG.services.forEach(service => {
+      CONFIG.services.forEach((service) => {
         const card = document.createElement('article');
         card.className = 'card';
         card.innerHTML = `
           <div>
-            <div class="flag">${service.flag}</div>
+            <div class="badge">${service.icon}</div>
             <div class="region">${service.region}</div>
-            <p class="desc">${service.description}</p>
+            <p class="description">${service.description}</p>
           </div>
           <button class="join ${service.id}" type="button">${service.buttonLabel}</button>
         `;
-        card.querySelector('button').addEventListener('click', () => goToTeams(service.teamsUrl));
+        card.querySelector('button').addEventListener('click', () => openTeams(service.teamsUrl));
         cards.appendChild(card);
       });
     }
 
-    function applyLabels() {
-      document.querySelector('.title').textContent = CONFIG.title;
-      document.querySelector('.subtitle').textContent = CONFIG.subtitle;
-    }
+    startButton.addEventListener('click', () => show('menu'));
+    backButton.addEventListener('click', () => show('home'));
 
-    startBtn.addEventListener('click', () => show('services'));
-    backBtn.addEventListener('click', () => show('home'));
-
-    ['click', 'touchstart', 'mousemove', 'keydown'].forEach(evt => {
-      document.addEventListener(evt, resetInactivity, { passive: true });
+    ['click', 'touchstart', 'mousemove', 'keydown'].forEach((eventName) => {
+      document.addEventListener(eventName, resetInactivity, { passive: true });
     });
 
-    applyLabels();
     buildCards();
     resetInactivity();
   </script>

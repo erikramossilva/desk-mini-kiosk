@@ -1,36 +1,43 @@
 # Desk Mini Kiosk para GitHub Pages
 
-Este pacote publica uma página estática pronta para uso em Cisco Desk Mini com 3 opções de suporte via Microsoft Teams:
+Pacote final pronto para publicar uma página estática de kiosk no **Cisco Desk Mini** com **3 botões de suporte Microsoft Teams**:
 
 - Brasil
 - USA
 - EUR
 
-## Arquivos
+## Estrutura do pacote
 
 - `index.html` → página principal do kiosk
 - `.nojekyll` → evita processamento Jekyll no GitHub Pages
+- `README.md` → instruções de publicação
+
+## Ajuste dos links do Teams
+
+Abra o arquivo `index.html` e localize o bloco `CONFIG.services`.
+Substitua os 3 links abaixo pelos links reais do Microsoft Teams:
+
+- `https://teams.microsoft.com/l/meetup-join/EXEMPLO-BRASIL`
+- `https://teams.microsoft.com/l/meetup-join/EXEMPLO-USA`
+- `https://teams.microsoft.com/l/meetup-join/EXEMPLO-EUR`
 
 ## Como publicar no GitHub Pages
 
-1. Crie um repositório novo no GitHub, por exemplo: `desk-mini-kiosk`
-2. Envie os arquivos deste pacote para a raiz do repositório
-3. No GitHub, abra **Settings > Pages**
+1. Crie um repositório novo no GitHub, por exemplo `desk-mini-kiosk`
+2. Faça upload destes 3 arquivos para a raiz do repositório:
+   - `index.html`
+   - `.nojekyll`
+   - `README.md`
+3. No GitHub, abra `Settings > Pages`
 4. Em **Build and deployment**, selecione:
    - **Source:** Deploy from a branch
    - **Branch:** `main`
    - **Folder:** `/ (root)`
 5. Salve e aguarde a publicação
-6. A URL final normalmente fica assim:
-   - `https://SEU-USUARIO.github.io/desk-mini-kiosk/`
 
-## Ajuste dos links do Teams
+A URL final normalmente será:
 
-Edite o bloco `services` dentro do `index.html` e substitua:
-
-- `SEU-LINK-BRASIL`
-- `SEU-LINK-USA`
-- `SEU-LINK-EUR`
+`https://SEU-USUARIO.github.io/desk-mini-kiosk/`
 
 ## Configuração no Cisco Desk Mini
 
@@ -52,4 +59,4 @@ xConfiguration UserInterface Assistant Mode: Off
 
 ## Observação
 
-Para operação estável com Microsoft Teams, substitua os placeholders por links reais de reunião ou atendimento.
+O GitHub Pages publica esta página como site estático. O Microsoft Teams suporta entrada por link em navegador, mas para ambiente corporativo é recomendado validar os links finais e o comportamento no equipamento antes de colocar em produção.
